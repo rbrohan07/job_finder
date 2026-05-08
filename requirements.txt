@@ -8,6 +8,8 @@ lxml
 tls-client
 urllib3
 markdownify
+pydantic
 selenium
 webdriver-manager
+
 
