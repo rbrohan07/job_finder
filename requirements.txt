@@ -1,0 +1,13 @@
+requests
+pandas
+numpy
+regex
+feedparser
+beautifulsoup4
+lxml
+tls-client
+urllib3
+markdownify
+selenium
+webdriver-manager
+
