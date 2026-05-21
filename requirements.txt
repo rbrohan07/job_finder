@@ -11,5 +11,5 @@ markdownify
 pydantic
 selenium
 webdriver-manager
-
-
+flask
+flask_cors

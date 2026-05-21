@@ -256,57 +256,58 @@ def get_user_input():
 
 # Main execution
 print("\n" + "="*50)
-print("Job Search Application")
-print("="*50)
+if __name__ == "__main__":
+    print("Job Search Application")
+    print("="*50)
 
-# Get all user input first
-query, expected_salary, location, results_wanted, country, selected_sources = get_user_input()
+    # Get all user input first
+    query, expected_salary, location, results_wanted, country, selected_sources = get_user_input()
 
-# Fetch jobs from selected sources
-print("Fetching Jobs...")
-print("="*50 + "\n")
+    # Fetch jobs from selected sources
+    print("Fetching Jobs...")
+    print("="*50 + "\n")
 
-result = []
-for source in selected_sources:
-    name, fetch_func = AVAILABLE_SOURCES[source]
-    print(f"Fetching from {name}...")
-    try:
-        # Check if fetch_func needs parameters (for JobSpy sources)
-        if source in ["indeed", "linkedin", "zip_recruiter", "glassdoor", "google", "naukri", "bayt", "bdjobs"]:
-            jobs = fetch_func(query, location, results_wanted, country)
-        else:
-            jobs = fetch_func()
-        
-        result.extend(jobs)
-        print(f"  -> Got {len(jobs)} jobs from {name}")
-    except Exception as e:
-        print(f"  -> Error fetching from {name}: {e}")
-        print(f"  -> Exception: {str(e)}")
+    result = []
+    for source in selected_sources:
+        name, fetch_func = AVAILABLE_SOURCES[source]
+        print(f"Fetching from {name}...")
+        try:
+            # Check if fetch_func needs parameters (for JobSpy sources)
+            if source in ["indeed", "linkedin", "zip_recruiter", "glassdoor", "google", "naukri", "bayt", "bdjobs"]:
+                jobs = fetch_func(query, location, results_wanted, country)
+            else:
+                jobs = fetch_func()
+            
+            result.extend(jobs)
+            print(f"  -> Got {len(jobs)} jobs from {name}")
+        except Exception as e:
+            print(f"  -> Error fetching from {name}: {e}")
+            print(f"  -> Exception: {str(e)}")
 
-print(f"\nTotal jobs fetched: {len(result)}")
+    print(f"\nTotal jobs fetched: {len(result)}")
 
-# Remove duplicates
-result = add_ids(result)
-result = remove_duplicate(result)
-print(f"Jobs after removing duplicates: {len(result)}")
+    # Remove duplicates
+    result = add_ids(result)
+    result = remove_duplicate(result)
+    print(f"Jobs after removing duplicates: {len(result)}")
 
-# Apply filters (basic filtering)
-print("Applying filters...")
-result = apply_filters(result, query=query, expected_salary=expected_salary, allowed_sources=None)
+    # Apply filters (basic filtering)
+    print("Applying filters...")
+    result = apply_filters(result, query=query, expected_salary=expected_salary, allowed_sources=None)
 
-# Apply scoring and ranking
-print("Scoring and ranking jobs...")
-result = score_and_rank_jobs(
-    result, 
-    query=query, 
-    expected_salary=expected_salary,
-    min_score=30,  # Minimum score threshold
-    limit=50  # Top 50 jobs
-)
+    # Apply scoring and ranking
+    print("Scoring and ranking jobs...")
+    result = score_and_rank_jobs(
+        result, 
+        query=query, 
+        expected_salary=expected_salary,
+        min_score=30,  # Minimum score threshold
+        limit=50  # Top 50 jobs
+    )
 
-# Save results
-with open("result.json", "w") as json_file:
-    json.dump(result, json_file, indent=4)
+    # Save results
+    with open("result.json", "w") as json_file:
+        json.dump(result, json_file, indent=4)
 
-print(f"\nSaved {len(result)} scored and ranked jobs to result.json")
-print("Done!")
+    print(f"\nSaved {len(result)} scored and ranked jobs to result.json")
+    print("Done!")
